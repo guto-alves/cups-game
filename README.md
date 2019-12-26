@@ -6,5 +6,5 @@ Simple Cups Game for Android
 
 ## Download
 
-[Cups Game.apk](https://drive.google.com/file/d/1ATkdc70-fz2B8yF8fMsSHisWc4448uUW/view?usp=sharing)
+[Cups Game.apk](https://drive.google.com/file/d/1RRf-g_memNbzr4T3rctUh8981n3-aR7N/view?usp=sharing)
 
