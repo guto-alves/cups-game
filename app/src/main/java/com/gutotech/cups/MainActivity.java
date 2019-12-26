@@ -7,19 +7,20 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.tapadoo.alerter.Alerter;
+
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ImageView left, middle, right;
 
     private List<Integer> cards;
-    private final int ACE_OF_SPADES = 107;
-    private final int SEVEN_OF_HEARTS = 207;
-    private final int SEVEN_OF_DIAMONDS = 407;
+    private static final int ACE_OF_SPADES = 107;
+    private static final int SEVEN_OF_HEARTS = 207;
+    private static final int SEVEN_OF_DIAMONDS = 407;
 
     private enum Direction {LEFT, MIDDLE, RIGHT}
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         right = findViewById(R.id.right);
         Button new_game = findViewById(R.id.new_game);
 
-        cards = new ArrayList<>();
+        cards = new LinkedList<>();
         cards.add(ACE_OF_SPADES);
         cards.add(SEVEN_OF_HEARTS);
         cards.add(SEVEN_OF_DIAMONDS);
@@ -80,12 +81,34 @@ public class MainActivity extends AppCompatActivity {
         Animation anim_middle = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.middle);
         Animation anim_right = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.right);
 
+        anim_left.setAnimationListener(animationListener);
+        anim_middle.setAnimationListener(animationListener);
+        anim_right.setAnimationListener(animationListener);
+
         left.startAnimation(anim_left);
         middle.startAnimation(anim_middle);
         right.startAnimation(anim_right);
     }
 
+    private final Animation.AnimationListener animationListener = new Animation.AnimationListener() {
+        @Override
+        public void onAnimationStart(Animation animation) {
+            enableImages(false);
+        }
+
+        @Override
+        public void onAnimationEnd(Animation animation) {
+            enableImages(true);
+        }
+
+        @Override
+        public void onAnimationRepeat(Animation animation) {
+        }
+    };
+
     public void assignImages(Direction chosenCard) {
+        enableImages(false);
+
         Direction winnerCard = Direction.LEFT;
 
         if (cards.get(0) == ACE_OF_SPADES) {
@@ -113,6 +136,16 @@ public class MainActivity extends AppCompatActivity {
             right.setImageResource(R.drawable.ic_diamonds);
 
         if (chosenCard == winnerCard)
-            Toast.makeText(MainActivity.this, "Guessed!", Toast.LENGTH_SHORT).show();
+            Alerter.create(this)
+                    .setTitle("Guessed!")
+                    .setIcon(R.drawable.ic_sentiment_satisfied_24dp)
+                    .setBackgroundColor(android.R.color.holo_green_light)
+                    .show();
+    }
+
+    private void enableImages(boolean enable) {
+        left.setEnabled(enable);
+        middle.setEnabled(enable);
+        right.setEnabled(enable);
     }
 }
